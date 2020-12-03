@@ -24,7 +24,7 @@ def insert():
 	cursor = connection.cursor()
 	with open('j_girls.txt', 'r') as f:
 		for name in f:
-			query = f"INSERT INTO jewish_girls_names (name) VALUES ('{name}');"
+			query = f"INSERT INTO jewish_girls_names (name) VALUES ('{name.strip()}');"
 			cursor.execute(query)
 			connection.commit()
 	connection.close()

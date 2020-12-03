@@ -31,7 +31,7 @@ def insert():
 	connection = psycopg2.connect( host=HOSTNAME, user=USERNAME, password=PASSWORD, dbname=DATABASE )
 	cursor = connection.cursor()
 	for name in names:
-		query = f"INSERT INTO popular_girls_names (name) VALUES ('{name}');"
+		query = f"INSERT INTO popular_girls_names (name) VALUES ('{name.strip()}');"
 		cursor.execute(query)
 		connection.commit()
 	connection.close()

@@ -11,13 +11,14 @@ fake = Faker()
 
 print('Congratulations on the birth of your child!\n')
 
+
 gender = input("If it's a boy type boy, if a girl type girl: ").lower()
 
 user_choice = input("""Would you like to:\n
 set a max length for the name? (max)\n
 choose a first letter? (first)\n
 both (both)\n
-see a list of popular boys names (pn)\n
+see a list of popular names (pn)\n
 see a list of jewish names (jn)\n
 or (any)?  """).lower()
 

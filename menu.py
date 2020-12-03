@@ -64,16 +64,15 @@ class Menu:
 
 	def rate(self):
 		self.internal_view()
-		name_to_rate = input('which name would you like to rate? ')
+		name_to_rate = input('which name would you like to rate? ').title()
 		rating = input('What rating would you like to give it? ')
 		query = f"UPDATE {self.table} SET rating = {rating} WHERE name = '{name_to_rate}'"
-		df['name'] = df['name'].str.rstrip()
 		execute(query)
 		self.choice()
 
 	def delete(self):
 		self.internal_view()
-		name_to_delete = input('which name would you like to delete? ')
+		name_to_delete = input('which name would you like to delete? ').title()
 		query = f"DELETE FROM {self.table} WHERE name = '{name_to_delete}'"
 		execute(query)
 		self.choice()
