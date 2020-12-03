@@ -1,6 +1,12 @@
-import pandas
+import pandas as pd
 import pandas.io.sql as psql
+import numpy as np
 import psycopg2
+pd.set_option('display.max_rows', 500)
+pd.set_option('display.max_columns', 500)
+
+
+
 
 
 HOSTNAME = 'localhost'
@@ -20,6 +26,9 @@ def execute(query):
 
 
 class Menu:
+
+	def __init__(self, table):
+		self.table = table
 
 
 	def choice(self):
@@ -42,33 +51,35 @@ class Menu:
 	def view(self):
 		connection = psycopg2.connect( host=HOSTNAME, user=USERNAME, password=PASSWORD, dbname=DATABASE )
 		cursor = connection.cursor()
-		df = psql.read_sql("SELECT name, rating FROM baby_names", connection)
+		df = psql.read_sql(f"SELECT name, rating FROM {self.table}", connection)
+		df['name'] = df['name'].str.rstrip()
 		print(df)
 		self.choice()
 
 	def internal_view(self):
 		connection = psycopg2.connect( host=HOSTNAME, user=USERNAME, password=PASSWORD, dbname=DATABASE )
 		cursor = connection.cursor()
-		df = psql.read_sql("SELECT name, rating FROM baby_names", connection)
+		df = psql.read_sql(f"SELECT name, rating FROM {self.table}", connection)
 		print(df)
 
 	def rate(self):
 		self.internal_view()
 		name_to_rate = input('which name would you like to rate? ')
 		rating = input('What rating would you like to give it? ')
-		query = f"UPDATE baby_names SET rating = {rating} WHERE name = '{name_to_rate}'"
+		query = f"UPDATE {self.table} SET rating = {rating} WHERE name = '{name_to_rate}'"
+		df['name'] = df['name'].str.rstrip()
 		execute(query)
 		self.choice()
 
 	def delete(self):
 		self.internal_view()
 		name_to_delete = input('which name would you like to delete? ')
-		query = f"DELETE FROM baby_names WHERE name = '{name_to_delete}'"
+		query = f"DELETE FROM {self.table} WHERE name = '{name_to_delete}'"
 		execute(query)
 		self.choice()
 
 	def delete_all(self):
-		query = f"DELETE FROM baby_names"
+		query = f"DELETE FROM {self.table}"
 		execute(query)
 		self.choice()
 
@@ -76,14 +87,15 @@ class Menu:
 	def export(self):
 		connection = psycopg2.connect( host=HOSTNAME, user=USERNAME, password=PASSWORD, dbname=DATABASE )
 		cursor = connection.cursor()
-		df = psql.read_sql("SELECT name, rating FROM baby_names", connection)
+		df = psql.read_sql(f"SELECT name, rating FROM {self.table}", connection)
+		df['name'] = df['name'].str.rstrip()
 		with open("index.html", "w") as f:
 			f.write(df.to_html())
 		exit()
 
 
-def insert(name):
-	query = f"INSERT INTO baby_names (name) VALUES ('{name}');"
-	execute(query)
+	def insert(self, name):
+		query = f"INSERT INTO {self.table} (name) VALUES ('{name}');"
+		execute(query)
 
 

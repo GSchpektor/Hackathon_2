@@ -1,67 +1,48 @@
 import menu
 import create_db
+import options
 from faker import Faker 
 fake = Faker()
 
-# create_db.if_db_exists()
+# use the functions below to create a db, 
+# it requires the name and password to be set to postgres
 # create_db.create_database()
-# create_db.create_table()
+
 
 print('Congratulations on the birth of your child!\n')
-gender = input("If it's a boy type boy, if a girl type girl: ")
 
-#################################################################
+gender = input("If it's a boy type boy, if a girl type girl: ").lower()
 
+user_choice = input("""Would you like to:\n
+set a max length for the name? (max)\n
+choose a first letter? (first)\n
+both (both)\n
+see a list of popular boys names (pn)\n
+see a list of jewish names (jn)\n
+or (any)?  """).lower()
 
-def no_length():
-	m1 = menu.Menu()
-	while True:
-		if gender == 'boy':
-			new_name = fake.first_name_male()
-		else:
-			new_name = fake.first_name_female()
-		print(new_name)
-		user_like = input("if you like this name type yes, else type no: ")
-		if user_like == 'yes':
-			menu.insert(new_name)
-			m1.choice()
-
-		else:
-			m1.choice()
-
-
-def with_max_length():
-	m2 = menu.Menu()
-	length = int(input('Max length of name: '))
-	while True:
-		if gender == 'boy':
-			while True:
-				new_name = fake.first_name_male()
-				if len(new_name) <= length:
-					break;
-		else:
-			while True:
-				new_name = fake.first_name_female()
-				if len(new_name) <= length:
-					break;
-		print(new_name)
-		user_like = input("if you like this name type yes, else type no: ")
-		if user_like == 'yes':
-			menu.insert(new_name)
-			m2.choice()
-
-		else:
-			m2.choice()
-
-
-#######################################################
-
-
-user_choice = input('Would you like to set a max length for the name? (yes/no) ')
-if user_choice == 'yes':
-	with_max_length()
+if user_choice == 'max':
+	create_db.create_table('max')
+	b1 = options.Babies(gender)
+	b1.with_max_length()
+elif user_choice == 'first':
+	create_db.create_table('first')
+	b2 = options.Babies(gender)
+	b2.with_first_letter()
+elif user_choice == 'both':
+	create_db.create_table('max_and_first')
+	b3 = options.Babies(gender)
+	b3.max_and_first()
+elif user_choice == 'pn':
+	b4 = options.Babies(gender)
+	b4.popular_names()
+elif user_choice == 'jn':
+	b5 = options.Babies(gender)
+	b5.jewish()
 else:
-	no_length()
+	create_db.create_table('just_name')
+	b6 = options.Babies(gender)
+	b6.just_name()
 
 		
 
